@@ -7,18 +7,16 @@ using Windows.UI.Xaml.Navigation;
 
 namespace UWPStoreDemo.Views
 {
-    public sealed partial class ItemsPage : Page
+    public sealed partial class ProductsPage : Page
     {
-        // TODO WTS: Change the grid as appropriate to your app, adjust the column definitions on ItemsPage.xaml.
-        // For more details see the documentation at https://docs.microsoft.com/windows/communitytoolkit/controls/datagrid
-        public ItemsPage()
+        public ProductsPage()
         {
             InitializeComponent();
         }
 
-        private ItemsViewModel ViewModel
+        private ProductsViewModel ViewModel
         {
-            get { return DataContext as ItemsViewModel; }
+            get { return DataContext as ProductsViewModel; }
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

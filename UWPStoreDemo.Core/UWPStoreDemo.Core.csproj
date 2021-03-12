@@ -5,7 +5,7 @@
     <RootNamespace>UWPStoreDemo.Core</RootNamespace>
   </PropertyGroup>
 
-   <ItemGroup>
-    <Folder Include="Models\" />
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="33.0.2" />
   </ItemGroup>
 </Project>

@@ -64,7 +64,7 @@ namespace UWPStoreDemo
 
             _container.PerRequest<ShellViewModel>();
             _container.PerRequest<MainViewModel>();
-            _container.PerRequest<ItemsViewModel>();
+            _container.PerRequest<ProductsViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

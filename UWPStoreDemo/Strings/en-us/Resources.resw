@@ -133,8 +133,8 @@
     <value>Table showing sample sales data</value>
     <comment>Automation name (and description) for the DataGrid page content</comment>
   </data>
-  <data name="Shell_Items.Content" xml:space="preserve">
-    <value>Items</value>
-    <comment>Navigation view item name for Items</comment>
+  <data name="Shell_Products.Content" xml:space="preserve">
+    <value>Products</value>
+    <comment>Navigation view item name for Products</comment>
   </data>
 </root>
