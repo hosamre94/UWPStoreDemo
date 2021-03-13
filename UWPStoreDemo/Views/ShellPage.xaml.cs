@@ -16,6 +16,7 @@ namespace UWPStoreDemo.Views
         public ShellPage()
         {
             InitializeComponent();
+            navigationView.PaneTitle = Windows.ApplicationModel.Package.Current.DisplayName;
         }
 
         public INavigationService CreateNavigationService(WinRTContainer container)

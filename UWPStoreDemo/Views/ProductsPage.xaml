@@ -2,37 +2,147 @@
     x:Class="UWPStoreDemo.Views.ProductsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Style="{StaticResource PageStyle}"
     xmlns:model="using:UWPStoreDemo.Core.Models"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:cm="using:Caliburn.Micro"
     mc:Ignorable="d">
-    <Grid x:Name="ContentArea" Margin="{StaticResource SmallLeftRightMargin}">
-        <Grid>
+    <Grid x:Name="ContentArea">
+        <controls:ListDetailsView
+                ItemsSource="{x:Bind ViewModel.Items,Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.ActiveItem, Mode=TwoWay}" 
+                NoSelectionContent="Select an item to view"
+                CompactModeThresholdWidth="720">
+            <controls:ListDetailsView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="ItemImage"
+                                Source="{Binding Product.Image}"
+                                Margin="0,0,20,0"
+                                Width="60"
+                                Height="60"/>
+                        <StackPanel Margin="0,8">
+                            <TextBlock Text="{Binding Product.Title}" 
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="{Binding Product.SubTitle}" 
+                                   Style="{ThemeResource BodyTextBlockStyle}" 
+                                   MaxLines="1"/>
+                            <TextBlock Text="{Binding Product.Description}" 
+                                   Style="{ThemeResource BodyTextBlockStyle}" 
+                                   Opacity=".6" 
+                                   MaxLines="1"/>
+                        </StackPanel>
+                    </StackPanel>
 
-            <controls:DataGrid
-                x:Uid="DataTable"
-                AutoGenerateColumns="False"
-                GridLinesVisibility="Horizontal"
-                ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}">
-                <controls:DataGrid.Columns>
-                    <!--
-                        TODO WTS:
-                        Remove this column definitions and define columns for your data.
-                        Consider adding header properties to Resources.resw
-                    -->
-                    <controls:DataGridTextColumn Binding="{Binding Id}" Header="ProductID" />
-                    <controls:DataGridTextColumn Binding="{Binding Title}" Header="Title" />
-                    <controls:DataGridTemplateColumn Header="Image">
-                        <controls:DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate x:DataType="model:Product">
-                                <Image Source="{Binding Image}" />
-                            </DataTemplate>
-                        </controls:DataGridTemplateColumn.CellTemplate>
-                    </controls:DataGridTemplateColumn>
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>
-        </Grid>
+                </DataTemplate>
+            </controls:ListDetailsView.ItemTemplate>
+            <controls:ListDetailsView.DetailsTemplate>
+                <DataTemplate>
+                    <RelativePanel Margin="24,0" Visibility="{Binding IsEdit}">
+                        <Grid x:Name="ItemImage" Background="LightGray">
+                            <Image 
+                                Source="{Binding Product.Image}"
+                                Stretch="Fill"
+                                Width="350"
+                                Height="350"/>
+                        </Grid>
+                        <StackPanel RelativePanel.RightOf="ItemImage"
+                                    Margin="12,0,0,0">
+                            <TextBlock Text="{Binding Product.Title}" 
+                                   Style="{ThemeResource TitleTextBlockStyle}" 
+                                   Margin="0,-6,0,0"/>
+                            <TextBlock 
+                                   Text="{Binding Product.SubTitle}" 
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+
+                            <Rectangle HorizontalAlignment="Stretch"
+                                       Fill="LightGray"
+                                       Height="1"
+                                       Margin="0,20,0,10"/>
+                            <TextBlock 
+                                   Text="Category" 
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                            <TextBlock 
+                                   Text="{Binding Product.Category}" 
+                                   Style="{ThemeResource BodyTextBlockStyle}"/>
+
+
+                            <Rectangle HorizontalAlignment="Stretch"
+                                       Fill="LightGray"
+                                       Height="1"
+                                       Margin="0,20,0,10"/>
+                            <TextBlock 
+                                   Text="Total" 
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Style="{ThemeResource BodyTextBlockStyle}">
+                                <Run Text="{Binding Product.Total}"  />
+                                <Run Text="-" />
+                                <Run Text="{Binding Product.Unit}"  />
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="Description"
+                                    RelativePanel.Below="ItemImage">
+                            <TextBlock  
+                                   Text="Description" 
+                                   Style="{ThemeResource SubtitleTextBlockStyle}" 
+                                   Margin="0,12,0,0"/>
+                            <TextBlock x:Name="Body" 
+                                   Text="{Binding Product.Description}" 
+                                   Style="{ThemeResource BodyTextBlockStyle}" 
+                                   TextWrapping="Wrap" 
+                                   Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </RelativePanel>
+                </DataTemplate>
+            </controls:ListDetailsView.DetailsTemplate>
+            <controls:ListDetailsView.NoSelectionContentTemplate>
+                <DataTemplate>
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Shop" 
+                                    RenderTransformOrigin=".5,.5">
+                            <SymbolIcon.RenderTransform>
+                                <CompositeTransform 
+                                  ScaleX="2" 
+                                  ScaleY="2"/>
+                            </SymbolIcon.RenderTransform>
+                        </SymbolIcon>
+                        <TextBlock Text="{Binding}" 
+                                   FontSize="24" 
+                                   Margin="0,12"/>
+                    </StackPanel>
+                </DataTemplate>
+            </controls:ListDetailsView.NoSelectionContentTemplate>
+            <controls:ListDetailsView.ListCommandBar>
+                <CommandBar>
+                    <AppBarButton Icon="Add"
+                                  Label="New Product"
+                                  cm:Message.Attach="[Event Click] = [Action NewProductCliked()]"/>
+                    <CommandBar.Content>
+                        <TextBlock Margin="12,10">
+                        <Run Text="{x:Bind ViewModel.Items.Count}" />
+                        <Run Text="Items" />
+                        </TextBlock>
+                    </CommandBar.Content>
+                </CommandBar>
+            </controls:ListDetailsView.ListCommandBar>
+            <controls:ListDetailsView.DetailsCommandBar >
+                <CommandBar>
+                    <AppBarButton Icon="Edit" Label="Edit" cm:Message.Attach="[Event Click] = [Action EditProductClicked()]"/>
+                    <AppBarButton Icon="Delete" Label="Delete">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Are you sure you want to delete this item?" Margin="0,0,0,12" />
+                                    <Button  cm:Message.Attach="[Event Click] = [Action DeleteAsync()]" Content="Yes, delete it" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </AppBarButton>
+                </CommandBar>
+            </controls:ListDetailsView.DetailsCommandBar>
+        </controls:ListDetailsView>
     </Grid>
 </Page>

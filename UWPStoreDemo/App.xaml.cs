@@ -7,6 +7,8 @@ using UWPStoreDemo.Services;
 using UWPStoreDemo.ViewModels;
 
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
 namespace UWPStoreDemo
@@ -38,6 +40,28 @@ namespace UWPStoreDemo
             {
                 await ActivationService.ActivateAsync(args);
             }
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
+
+            // Set active window colors
+            var blueColor = Windows.UI.Color.FromArgb(0, 0, 99, 177);
+            var blueColorLight = Windows.UI.Color.FromArgb(0, 25, 114, 148);
+
+            titleBar.ForegroundColor = Windows.UI.Colors.White;
+            titleBar.BackgroundColor = blueColor;
+            titleBar.ButtonForegroundColor = Windows.UI.Colors.White;
+            titleBar.ButtonBackgroundColor = blueColor;
+            titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.White;
+            titleBar.ButtonHoverBackgroundColor = blueColorLight;
+            titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.ButtonPressedBackgroundColor = blueColorLight;
+
+            // Set inactive window colors
+            titleBar.InactiveForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.InactiveBackgroundColor = Windows.UI.Colors.SkyBlue;
+            titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.SkyBlue;
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
@@ -65,6 +89,7 @@ namespace UWPStoreDemo
             _container.PerRequest<ShellViewModel>();
             _container.PerRequest<MainViewModel>();
             _container.PerRequest<ProductsViewModel>();
+            _container.PerRequest<EditProductViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
